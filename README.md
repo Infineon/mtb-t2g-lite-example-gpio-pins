@@ -20,7 +20,7 @@ This example demonstrates the GPIO pin operation on the TRAVEO™ T2G MCU, using
 
 ## Supported kits (make variable 'TARGET')
 
-- TRAVEO™ T2G body high evaluation kit (`KIT_T2G_B-H_LITE`) - Default value of `TARGET`
+- TRAVEO™ T2G body high evaluation kit (`KIT_T2G-B-H_LITE`) - Default value of `TARGET`
 
 ## Hardware setup
 
