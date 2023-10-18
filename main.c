@@ -1,15 +1,15 @@
 /******************************************************************************
 * File Name:   main.c
 *
-* Description: This is the source code for the Infineon XMC7000 devices GPIO Pins
+* Description: This is the source code for the Infineon T2G devices GPIO Pins
 * example. This code example demonstrates the use of GPIO pins configured
-* as inputs, outputs, GPIO interrupts and full configuration in the XMC7000 devices.
+* as inputs, outputs, GPIO interrupts and full configuration in the T2G devices.
 *
 * Related Document: See README.md
 *
 *
 *******************************************************************************
-* Copyright 2022, Cypress Semiconductor Corporation (an Infineon company) or
+* Copyright 2022-2023, Cypress Semiconductor Corporation (an Infineon company) or
 * an affiliate of Cypress Semiconductor Corporation.  All rights reserved.
 *
 * This software, including source code, documentation and related
@@ -83,7 +83,7 @@ const cy_stc_gpio_pin_config_t P21_4_Pin_Init =
 #endif
 
 /* This structure is used to initialize a full GPIO Port using PDL configuration */
-const cy_stc_gpio_prt_config_t port10_Init =
+const cy_stc_gpio_prt_config_t port13_Init =
     {
         .out = 0x000000FFu,        /* Initial output data for the IO pins in the port */
         .intrMask = 0x00000000u,   /* Interrupt enable mask for the port interrupt */
@@ -96,10 +96,10 @@ const cy_stc_gpio_prt_config_t port10_Init =
         .sel1Active = 0x00000000u, /* HSIOM selection for port pins 4,5,6,7 */
 };
 
-/* This structure initializes the Port21 interrupt for the NVIC */
+/* This structure initializes the Port5 interrupt for the NVIC */
 cy_stc_sysint_t intrCfg =
 {
-    .intrSrc = ((NvicMux3_IRQn << 16) | ioss_interrupts_gpio_5_IRQn), /* Interrupt source is GPIO port 5 interrupt */
+    .intrSrc = ((NvicMux3_IRQn << CY_SYSINT_INTRSRC_MUXIRQ_SHIFT) | ioss_interrupts_gpio_5_IRQn), /* Interrupt source is GPIO port 5 interrupt */
     .intrPriority = GPIO_INTERRUPT_PRIORITY                            /* Interrupt priority is 7 */
 };
 
@@ -118,7 +118,6 @@ uint32 pinState = 0ul;
 #else
 #define CYBSP_USER_BUTTON_PORT      CYBSP_USER_BTN1_PORT
 #define CYBSP_USER_BUTTON_PIN       CYBSP_USER_BTN1_PIN
-
 #endif
 
 
@@ -206,8 +205,7 @@ static void pdl_code_example()
     /* the configuration data into direct register writes for the whole port. Its limitation */
     /* is that it must configure all pins in a port and the user must calculate the */
     /* combined register values for all pins. */
-    //Cy_GPIO_Port_Init(GPIO_PRT5, &port5_Init);
-    Cy_GPIO_Port_Init(GPIO_PRT10, &port10_Init);
+    Cy_GPIO_Port_Init(GPIO_PRT13, &port13_Init);
 
     /* Initialize USER_LED */
     Cy_GPIO_Pin_FastInit(CYBSP_USER_LED_PORT, CYBSP_USER_LED_PIN, CY_GPIO_DM_STRONG, 1UL, HSIOM_SEL_GPIO);
@@ -281,10 +279,9 @@ static void pdl_code_example()
         /* read-modify-write operations. All pins in a Port under direct register */
         /* control should only be accessed by a single CPU core. */
 
-        portReadValue = GPIO_PRT10->IN;
+        portReadValue = GPIO_PRT13->IN;
         portReadValue++;
-        GPIO_PRT10->OUT = portReadValue;
-
+        GPIO_PRT13->OUT = portReadValue;
     }
 }
 
